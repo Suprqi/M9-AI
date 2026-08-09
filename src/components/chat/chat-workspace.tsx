@@ -63,11 +63,10 @@ export function ChatWorkspace({
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
-  const visible = [...messages, ...optimistic];
-
-  useEffect(() => {
-    setOptimistic([]);
-  }, [messages.length, activeId]);
+  // The optimistic bubble is derived, not synced: it only renders while the
+  // send transition is in flight. Once the transition settles, `messages`
+  // already contains the persisted turn, so there is nothing to clear.
+  const visible = pending ? [...messages, ...optimistic] : messages;
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });

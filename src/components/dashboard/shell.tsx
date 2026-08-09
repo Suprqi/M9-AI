@@ -175,11 +175,8 @@ export function DashboardShell({
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Close the mobile drawer whenever navigation completes.
-  useEffect(() => {
-    setDrawerOpen(false);
-  }, [pathname]);
-
+  // The drawer closes from each link's onNavigate handler rather than from an
+  // effect on `pathname` — reacting to the route would re-render twice.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") setDrawerOpen(false);
