@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+/*
+  M9 AI design tokens.
+  Dark, premium, Arabic-first. Blue → teal gradient reserved for emphasis only.
+*/
+@theme {
+  --color-ink-950: #05070d;
+  --color-ink-900: #0a0e1a;
+  --color-ink-850: #0e1424;
+  --color-ink-800: #131b2e;
+  --color-ink-700: #1c2740;
+  --color-ink-600: #2a3854;
+
+  --color-brand-50: #eff6ff;
+  --color-brand-300: #7cb2ff;
+  --color-brand-400: #4d94ff;
+  --color-brand-500: #2f7dfb;
+  --color-brand-600: #1d63e0;
+
+  --color-mint-300: #6ee7c5;
+  --color-mint-400: #34d3a6;
+  --color-mint-500: #14b88b;
+  --color-mint-600: #0e9270;
+
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-strong: rgba(255, 255, 255, 0.16);
+
+  --font-sans:
+    "Segoe UI", "SF Arabic", "Geeza Pro", "Noto Sans Arabic", "Dubai", Tahoma,
+    system-ui, -apple-system, sans-serif;
+
+  --radius-card: 1rem;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ink-950);
+    color: #e8edf7;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Arabic numerals read better in Latin form inside tables and metrics. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background: var(--color-brand-600);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-400);
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-700);
+    border-radius: 999px;
+    border: 2px solid var(--color-ink-950);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-600);
+  }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image:
+      linear-gradient(to left, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .glass {
+    background: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.055),
+      rgba(255, 255, 255, 0.018)
+    );
+    backdrop-filter: blur(12px);
+  }
+
+  .text-gradient {
+    background: linear-gradient(
+      100deg,
+      var(--color-brand-400),
+      var(--color-mint-400)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glow-brand {
+    box-shadow:
+      0 0 0 1px rgba(47, 125, 251, 0.18),
+      0 18px 48px -24px rgba(47, 125, 251, 0.65);
+  }
+
+  .prose-ar {
+    line-height: 1.9;
+  }
+  .prose-ar h1,
+  .prose-ar h2,
+  .prose-ar h3 {
+    font-weight: 700;
+    color: #f2f6fd;
+    margin-block: 1.25em 0.6em;
+  }
+  .prose-ar h1 {
+    font-size: 1.5rem;
+  }
+  .prose-ar h2 {
+    font-size: 1.25rem;
+  }
+  .prose-ar h3 {
+    font-size: 1.05rem;
+  }
+  .prose-ar p {
+    margin-block: 0.75em;
+  }
+  .prose-ar ul,
+  .prose-ar ol {
+    margin-block: 0.75em;
+    padding-inline-start: 1.5em;
+  }
+  .prose-ar ul {
+    list-style: disc;
+  }
+  .prose-ar ol {
+    list-style: decimal;
+  }
+  .prose-ar li {
+    margin-block: 0.3em;
+  }
+  .prose-ar strong {
+    color: #fff;
+    font-weight: 600;
+  }
+  .prose-ar table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-block: 1em;
+    font-size: 0.9em;
+  }
+  .prose-ar th,
+  .prose-ar td {
+    border: 1px solid var(--color-line-strong);
+    padding: 0.5rem 0.75rem;
+    text-align: start;
+  }
+  .prose-ar th {
+    background: rgba(255, 255, 255, 0.04);
+    font-weight: 600;
+  }
+  .prose-ar blockquote {
+    border-inline-start: 3px solid var(--color-brand-500);
+    padding-inline-start: 1rem;
+    color: #aebbd2;
+    margin-block: 1em;
+  }
+  .prose-ar code {
+    background: rgba(255, 255, 255, 0.07);
+    padding: 0.1em 0.35em;
+    border-radius: 0.3em;
+    font-size: 0.9em;
+  }
+  .prose-ar hr {
+    border-color: var(--color-line);
+    margin-block: 1.5em;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
