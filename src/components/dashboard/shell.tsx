@@ -188,13 +188,13 @@ export function DashboardShell({
   return (
     <div className="flex min-h-dvh">
       {/* desktop sidebar */}
-      <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 border-s-0 border-e border-line bg-ink-900/60 lg:block">
+      <aside className="no-print sticky top-0 hidden h-dvh w-64 shrink-0 border-s-0 border-e border-line bg-ink-900/60 lg:block">
         <SidebarContent user={user} pathname={pathname} />
       </aside>
 
       {/* mobile drawer */}
       {drawerOpen ? (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="no-print fixed inset-0 z-50 lg:hidden">
           <button
             type="button"
             aria-label="إغلاق القائمة"
@@ -220,7 +220,7 @@ export function DashboardShell({
       ) : null}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-line bg-ink-950/80 px-4 backdrop-blur-xl sm:px-6">
+        <header className="no-print sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-line bg-ink-950/80 px-4 backdrop-blur-xl sm:px-6">
           <button
             type="button"
             onClick={() => setDrawerOpen(true)}

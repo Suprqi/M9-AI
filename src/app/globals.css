@@ -275,6 +275,27 @@
   }
 }
 
+/*
+  Printed / exported documents are always on white paper, whatever theme the
+  app is in. Rather than fighting utility specificity per element, re-declare
+  the variables the .prose-ar rules already read — the cascade then recolours
+  headings, borders, table headers, code and quotes in one place.
+*/
+.print-doc {
+  --text-body: #172033;
+  --text-heading: #0b1220;
+  --text-strong: #000000;
+  --text-quote: #334155;
+  --color-line: #e2e8f0;
+  --color-line-strong: #cbd5e1;
+  --color-brand-500: #2f7dfb;
+  --overlay-panel: #f1f5f9;
+  --overlay-code: #f1f5f9;
+
+  background: #ffffff;
+  color: #172033;
+}
+
 @media print {
   @page {
     size: A4;
