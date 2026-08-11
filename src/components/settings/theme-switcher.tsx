@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Check, Lock, Moon, Sun } from "lucide-react";
@@ -35,7 +34,6 @@ export function ThemeSwitcher({
   accent: Accent;
   enabled: boolean;
 }) {
-  const router = useRouter();
   const [mode, setMode] = useState<ThemeMode>(initialMode);
   const [accent, setAccent] = useState<Accent>(initialAccent);
   const [pending, startTransition] = useTransition();
@@ -58,7 +56,6 @@ export function ThemeSwitcher({
         toast.error(result.message ?? "تعذر تحديث المظهر.");
         return;
       }
-      router.refresh();
     });
   }
 

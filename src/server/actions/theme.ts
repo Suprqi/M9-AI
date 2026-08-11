@@ -1,7 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-
 import { requireUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { AppError, toPublicError } from "@/lib/errors";
@@ -49,10 +47,10 @@ export async function updateThemeAction(
       data: { themeMode: mode, accent },
     });
 
-    // The theme is rendered from <html> in the root layout, so every route's
-    // cached markup carries the old attributes until it is revalidated.
-    revalidatePath("/", "layout");
-
+    // Deliberately no revalidatePath: every route here is dynamically rendered,
+    // so the next request already reads the new value. Busting the whole layout
+    // cache only forced a slow re-render of a change the client had applied
+    // instantly.
     return { ok: true, message: "تم تحديث المظهر." };
   } catch (error) {
     const safe = toPublicError(error, "updateThemeAction");
