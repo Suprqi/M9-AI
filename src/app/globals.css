@@ -276,11 +276,33 @@
 }
 
 @media print {
-  body {
-    background: #fff;
-    color: #000;
+  @page {
+    size: A4;
+    margin: 18mm 16mm;
   }
+
+  /* The app may be in dark mode; printed output is always light. */
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
   .no-print {
     display: none !important;
+  }
+
+  /* Keep tables, headings and quotes from splitting across pages. */
+  .prose-ar table,
+  .prose-ar blockquote,
+  .prose-ar pre {
+    break-inside: avoid;
+  }
+  .prose-ar h1,
+  .prose-ar h2,
+  .prose-ar h3 {
+    break-after: avoid;
+  }
+  .prose-ar tr {
+    break-inside: avoid;
   }
 }

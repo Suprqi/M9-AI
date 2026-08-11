@@ -157,7 +157,7 @@ export function DocumentEditor({
               <Button asChild variant="secondary" size="sm">
                 <a href={`/dashboard/documents/${doc.id}/print`} target="_blank" rel="noreferrer">
                   <Printer className="h-4 w-4" />
-                  طباعة / PDF
+                  PDF — تنزيل أو طباعة
                 </a>
               </Button>
             </>
