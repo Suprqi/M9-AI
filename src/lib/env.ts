@@ -9,7 +9,7 @@ const serverEnvSchema = z.object({
   AUTH_SECRET: z.string().min(16, "AUTH_SECRET must be at least 16 characters"),
   AI_PROVIDER: z.enum(["mock", "anthropic"]).default("mock"),
   AI_API_KEY: z.string().optional().default(""),
-  AI_MODEL: z.string().optional().default("claude-opus-5"),
+  AI_MODEL: z.string().optional().default("claude-sonnet-5"),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
 });
 

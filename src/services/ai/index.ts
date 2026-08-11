@@ -18,12 +18,26 @@ export function getAIProvider(): AIProvider {
   if (cached) return cached;
 
   const env = getEnv();
+
   if (env.AI_PROVIDER === "anthropic" && env.AI_API_KEY) {
     cached = new AnthropicProvider(env.AI_API_KEY, env.AI_MODEL);
-  } else {
-    cached = new MockProvider();
+    return cached;
   }
 
+  // A configured key that goes unused is almost always a mistake, and silently
+  // serving mock output makes it look like the model is simply answering badly.
+  if (env.AI_API_KEY && env.AI_PROVIDER !== "anthropic") {
+    console.warn(
+      JSON.stringify({
+        level: "warn",
+        message:
+          'AI_API_KEY is set but AI_PROVIDER is not "anthropic" — falling back to the mock provider. Set AI_PROVIDER="anthropic" to use the real one.',
+        timestamp: new Date().toISOString(),
+      })
+    );
+  }
+
+  cached = new MockProvider();
   return cached;
 }
 

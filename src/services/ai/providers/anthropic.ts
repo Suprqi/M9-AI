@@ -11,6 +11,21 @@ import type {
  * Real provider, activated only when AI_API_KEY is present. The key is read
  * server-side and never serialized into any response.
  */
+/** Models that accept the server-side `fallbacks` parameter. */
+const FALLBACK_CAPABLE = ["claude-opus-5", "claude-fable-5", "claude-mythos-5"];
+
+function supportsFallbacks(model: string): boolean {
+  return FALLBACK_CAPABLE.some((m) => model.startsWith(m));
+}
+
+function isUnsupportedFallbackError(error: unknown): boolean {
+  return (
+    error instanceof Anthropic.BadRequestError &&
+    typeof error.message === "string" &&
+    error.message.includes("fallbacks")
+  );
+}
+
 export class AnthropicProvider implements AIProvider {
   readonly name = "anthropic";
   readonly model: string;
@@ -22,25 +37,36 @@ export class AnthropicProvider implements AIProvider {
     this.model = model;
   }
 
+  /** SDK typings lag the beta parameters, so the payload is cast at the edge. */
+  private send(params: Record<string, unknown>) {
+    return this.client.beta.messages.create(
+      params as unknown as Parameters<typeof this.client.beta.messages.create>[0]
+    );
+  }
+
   async complete(request: AICompletionRequest): Promise<AICompletionResult> {
-    // `fallbacks: "default"` re-runs a safety-declined request on Anthropic's
-    // recommended fallback model. Typed loosely because SDK typings for the
-    // beta parameter can lag the API.
-    const params = {
+    const baseParams = {
       model: this.model,
       max_tokens: request.maxTokens ?? 8000,
       system: request.system,
       messages: request.messages.map((m) => ({ role: m.role, content: m.content })),
       output_config: { effort: "medium" },
-      betas: ["server-side-fallback-2026-07-01"],
-      fallbacks: "default",
     };
+
+    // `fallbacks: "default"` re-runs a safety-declined request on Anthropic's
+    // recommended model, but only some models accept the parameter — sending it
+    // to one that doesn't is a hard 400, so it is opt-in per model.
+    const params = supportsFallbacks(this.model)
+      ? {
+          ...baseParams,
+          betas: ["server-side-fallback-2026-07-01"],
+          fallbacks: "default",
+        }
+      : baseParams;
 
     let response;
     try {
-      response = await this.client.beta.messages.create(
-        params as unknown as Parameters<typeof this.client.beta.messages.create>[0]
-      );
+      response = await this.send(params);
     } catch (error) {
       if (error instanceof Anthropic.RateLimitError) {
         throw new AppError(
@@ -49,7 +75,16 @@ export class AnthropicProvider implements AIProvider {
           "anthropic rate limit"
         );
       }
-      throw new AppError("AI_PROVIDER_ERROR", undefined, "anthropic request failed");
+
+      // Belt-and-braces: if a future model drops `fallbacks`, degrade to a plain
+      // request rather than failing the user's generation outright.
+      if (isUnsupportedFallbackError(error)) {
+        response = await this.send(baseParams).catch(() => {
+          throw new AppError("AI_PROVIDER_ERROR", undefined, "anthropic retry failed");
+        });
+      } else {
+        throw new AppError("AI_PROVIDER_ERROR", undefined, "anthropic request failed");
+      }
     }
 
     if (!("content" in response)) {

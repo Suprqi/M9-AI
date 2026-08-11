@@ -13,6 +13,14 @@ import { db } from "@/lib/db";
 import { getPlanFor } from "@/lib/usage";
 import { TOOL_CATEGORY_LABELS, getTool } from "@/services/ai/tools/definitions";
 
+/**
+ * Generation runs as a Server Action inside this segment, so the segment's
+ * budget is what bounds it. A full document takes ~17–47s depending on model
+ * and effort; the platform default (10s on Vercel Hobby) would cut every
+ * request short. Verify your hosting plan actually permits this ceiling.
+ */
+export const maxDuration = 60;
+
 export async function generateMetadata({
   params,
 }: {

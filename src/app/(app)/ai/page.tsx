@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   description: "تحدّث مع M9 AI بالعربية وأنجز مهامك اليومية.",
 };
 
+/** Chat replies go through a Server Action in this segment — see tools/[key]. */
+export const maxDuration = 60;
+
 export default async function ChatPage({
   searchParams,
 }: {
