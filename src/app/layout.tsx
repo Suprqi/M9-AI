@@ -2,6 +2,13 @@ import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
 
 import { APP_URL } from "@/lib/env";
+import { getCurrentUser } from "@/lib/auth/session";
+import {
+  DEFAULT_ACCENT,
+  DEFAULT_MODE,
+  isAccent,
+  isThemeMode,
+} from "@/config/themes";
 
 import "./globals.css";
 
@@ -47,9 +54,25 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  // Rendered server-side so the correct theme is in the very first byte —
+  // a client-side switch here would flash the default theme on every load.
+  const user = await getCurrentUser().catch(() => null);
+  const mode = isThemeMode(user?.themeMode) ? user.themeMode : DEFAULT_MODE;
+  const accent = isAccent(user?.accent) ? user.accent : DEFAULT_ACCENT;
+
   return (
-    <html lang="ar" dir="rtl" suppressHydrationWarning>
+    <html
+      lang="ar"
+      dir="rtl"
+      data-theme={mode}
+      data-accent={accent}
+      suppressHydrationWarning
+    >
       <body className="min-h-dvh antialiased">
         {children}
         <Toaster

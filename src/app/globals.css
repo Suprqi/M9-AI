@@ -33,9 +33,90 @@
   --radius-card: 1rem;
 }
 
+/*
+  Theming works by re-declaring the same colour variables Tailwind already
+  generated from @theme above. Every `bg-ink-900` / `text-slate-400` utility
+  resolves through var(), so switching an attribute on <html> re-skins the whole
+  product without a single component knowing themes exist.
+
+  `slate` is used exclusively for text in this codebase, so the light theme
+  inverts that ramp rather than remapping every call site.
+*/
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --color-ink-950: #f6f8fc;
+  --color-ink-900: #ffffff;
+  --color-ink-850: #ffffff;
+  --color-ink-800: #eef2f9;
+  --color-ink-700: #dde5f0;
+  --color-ink-600: #c7d2e2;
+
+  /* Inverted text ramp: slate-50 is the strongest text in both themes. */
+  --color-slate-50: #0b1220;
+  --color-slate-100: #131c2e;
+  --color-slate-200: #26324a;
+  --color-slate-300: #3c4a66;
+  --color-slate-400: #56657f;
+  --color-slate-500: #6b7a93;
+  --color-slate-600: #8492a8;
+
+  --color-line: rgba(12, 22, 40, 0.1);
+  --color-line-strong: rgba(12, 22, 40, 0.18);
+
+  --text-body: #172033;
+  --text-heading: #0b1220;
+  --text-strong: #000000;
+  --text-quote: #46536b;
+  --overlay-weak: rgba(12, 22, 40, 0.025);
+  --overlay-soft: rgba(255, 255, 255, 0.92);
+  --overlay-softer: rgba(255, 255, 255, 0.6);
+  --overlay-panel: rgba(12, 22, 40, 0.04);
+  --overlay-code: rgba(12, 22, 40, 0.06);
+}
+
+/* Accent = the blue→green pair used by gradients, buttons, badges and rings. */
+:root[data-accent="violet"] {
+  --color-brand-300: #c4b5fd;
+  --color-brand-400: #a78bfa;
+  --color-brand-500: #8b5cf6;
+  --color-brand-600: #7c3aed;
+
+  --color-mint-300: #f0abfc;
+  --color-mint-400: #e879f9;
+  --color-mint-500: #d946ef;
+  --color-mint-600: #c026d3;
+  --accent-glow: 139, 92, 246;
+}
+
+:root[data-accent="amber"] {
+  --color-brand-300: #fcd34d;
+  --color-brand-400: #fbbf24;
+  --color-brand-500: #f59e0b;
+  --color-brand-600: #d97706;
+
+  --color-mint-300: #fda4af;
+  --color-mint-400: #fb7185;
+  --color-mint-500: #f43f5e;
+  --color-mint-600: #e11d48;
+  --accent-glow: 245, 158, 11;
+}
+
 @layer base {
   :root {
     color-scheme: dark;
+
+    /* Not Tailwind tokens — used by hand-written rules below. */
+    --text-body: #e8edf7;
+    --text-heading: #f2f6fd;
+    --text-strong: #ffffff;
+    --text-quote: #aebbd2;
+    --overlay-weak: rgba(255, 255, 255, 0.03);
+    --overlay-soft: rgba(255, 255, 255, 0.055);
+    --overlay-softer: rgba(255, 255, 255, 0.018);
+    --overlay-panel: rgba(255, 255, 255, 0.04);
+    --overlay-code: rgba(255, 255, 255, 0.07);
+    --accent-glow: 47, 125, 251;
   }
 
   * {
@@ -48,7 +129,7 @@
 
   body {
     background-color: var(--color-ink-950);
-    color: #e8edf7;
+    color: var(--text-body);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -89,16 +170,16 @@
 @layer utilities {
   .bg-grid {
     background-image:
-      linear-gradient(to left, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      linear-gradient(to left, var(--overlay-weak) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--overlay-weak) 1px, transparent 1px);
     background-size: 64px 64px;
   }
 
   .glass {
     background: linear-gradient(
       160deg,
-      rgba(255, 255, 255, 0.055),
-      rgba(255, 255, 255, 0.018)
+      var(--overlay-soft),
+      var(--overlay-softer)
     );
     backdrop-filter: blur(12px);
   }
@@ -116,8 +197,8 @@
 
   .glow-brand {
     box-shadow:
-      0 0 0 1px rgba(47, 125, 251, 0.18),
-      0 18px 48px -24px rgba(47, 125, 251, 0.65);
+      0 0 0 1px rgba(var(--accent-glow), 0.18),
+      0 18px 48px -24px rgba(var(--accent-glow), 0.55);
   }
 
   .prose-ar {
@@ -127,7 +208,7 @@
   .prose-ar h2,
   .prose-ar h3 {
     font-weight: 700;
-    color: #f2f6fd;
+    color: var(--text-heading);
     margin-block: 1.25em 0.6em;
   }
   .prose-ar h1 {
@@ -157,7 +238,7 @@
     margin-block: 0.3em;
   }
   .prose-ar strong {
-    color: #fff;
+    color: var(--text-strong);
     font-weight: 600;
   }
   .prose-ar table {
@@ -173,17 +254,17 @@
     text-align: start;
   }
   .prose-ar th {
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--overlay-panel);
     font-weight: 600;
   }
   .prose-ar blockquote {
     border-inline-start: 3px solid var(--color-brand-500);
     padding-inline-start: 1rem;
-    color: #aebbd2;
+    color: var(--text-quote);
     margin-block: 1em;
   }
   .prose-ar code {
-    background: rgba(255, 255, 255, 0.07);
+    background: var(--overlay-code);
     padding: 0.1em 0.35em;
     border-radius: 0.3em;
     font-size: 0.9em;

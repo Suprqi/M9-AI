@@ -29,6 +29,8 @@ export interface SessionUser {
   companyId: string | null;
   companyName: string | null;
   plan: Plan;
+  themeMode: string;
+  accent: string;
 }
 
 export async function createSession(
@@ -109,6 +111,8 @@ export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
     companyId: user.companyId,
     companyName: user.company?.name ?? null,
     plan: user.subscription?.plan ?? "FREE",
+    themeMode: user.themeMode,
+    accent: user.accent,
   };
 });
 

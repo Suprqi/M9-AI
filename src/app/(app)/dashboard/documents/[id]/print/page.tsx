@@ -34,7 +34,7 @@ export default async function PrintDocumentPage({
 
   return (
     <div className="mx-auto max-w-3xl bg-white px-10 py-12 text-black print:px-0 print:py-0">
-      <div className="no-print mb-8 flex items-center justify-between rounded-xl bg-slate-100 px-4 py-3 text-sm text-slate-700">
+      <div className="no-print mb-8 flex items-center justify-between rounded-xl bg-[#f1f5f9] px-4 py-3 text-sm text-slate-700">
         <span>استخدم أمر الطباعة في المتصفح ثم اختر «حفظ كـ PDF».</span>
       </div>
 
@@ -46,7 +46,7 @@ export default async function PrintDocumentPage({
         </p>
       </header>
 
-      <article className="prose-ar text-[15px] leading-9 text-black [&_blockquote]:text-slate-700 [&_code]:bg-slate-100 [&_h1]:text-black [&_h2]:text-black [&_h3]:text-black [&_strong]:text-black [&_td]:border-slate-300 [&_th]:border-slate-300 [&_th]:bg-slate-100">
+      <article className="prose-ar text-[15px] leading-9 text-black [&_blockquote]:text-slate-700 [&_code]:bg-[#f1f5f9] [&_h1]:text-black [&_h2]:text-black [&_h3]:text-black [&_strong]:text-black [&_td]:border-slate-300 [&_th]:border-slate-300 [&_th]:bg-[#f1f5f9]">
         <Markdown content={document.content} />
       </article>
 

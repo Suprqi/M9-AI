@@ -23,6 +23,8 @@ export interface PlanDefinition {
     teamMembers: number;
     export: boolean;
     allTools: boolean;
+    /** Light mode + accent colours (Pro and above). */
+    themes: boolean;
   };
 }
 
@@ -49,6 +51,7 @@ export const PLANS: Record<PlanKey, PlanDefinition> = {
       teamMembers: 1,
       export: false,
       allTools: false,
+      themes: false,
     },
   },
   PRO: {
@@ -66,6 +69,7 @@ export const PLANS: Record<PlanKey, PlanDefinition> = {
       "حفظ وتنظيم المستندات",
       "تصدير PDF و Word",
       "تخصيص نبرة الكتابة",
+      "تخصيص المظهر: وضع فاتح وثلاثة ألوان",
     ],
     limits: {
       generationsPerMonth: 500,
@@ -75,6 +79,7 @@ export const PLANS: Record<PlanKey, PlanDefinition> = {
       teamMembers: 1,
       export: true,
       allTools: true,
+      themes: true,
     },
   },
   BUSINESS: {
@@ -91,6 +96,7 @@ export const PLANS: Record<PlanKey, PlanDefinition> = {
       "إدارة المستخدمين والصلاحيات",
       "هوية وأسلوب موحّد للشركة",
       "تصدير غير محدود",
+      "تخصيص المظهر والألوان",
       "دعم ذو أولوية",
     ],
     limits: {
@@ -101,6 +107,7 @@ export const PLANS: Record<PlanKey, PlanDefinition> = {
       teamMembers: 25,
       export: true,
       allTools: true,
+      themes: true,
     },
   },
 };

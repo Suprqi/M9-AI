@@ -7,8 +7,17 @@ import {
   ProfileForm,
   SecurityForm,
 } from "@/components/settings/settings-forms";
+import { ThemeSwitcher } from "@/components/settings/theme-switcher";
+import { PLANS } from "@/config/plans";
+import {
+  DEFAULT_ACCENT,
+  DEFAULT_MODE,
+  isAccent,
+  isThemeMode,
+} from "@/config/themes";
 import { requireUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
+import { getPlanFor } from "@/lib/usage";
 
 export const metadata: Metadata = { title: "الحساب" };
 
@@ -42,6 +51,8 @@ export default async function SettingsPage() {
 
   if (!user) return null;
 
+  const plan = await getPlanFor(session.id);
+
   return (
     <PageShell>
       <PageHeader
@@ -52,6 +63,11 @@ export default async function SettingsPage() {
       <div className="mt-8 grid gap-5 lg:grid-cols-2 lg:items-start">
         <div className="space-y-5">
           <ProfileForm name={user.name} email={user.email} />
+          <ThemeSwitcher
+            mode={isThemeMode(session.themeMode) ? session.themeMode : DEFAULT_MODE}
+            accent={isAccent(session.accent) ? session.accent : DEFAULT_ACCENT}
+            enabled={PLANS[plan].limits.themes}
+          />
           <PreferencesForm preferences={user.aiPreference} />
         </div>
         <div className="space-y-5">
